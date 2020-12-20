@@ -1,19 +1,29 @@
-B-CAN Honda Civic giraffe
+Honda B-CAN Integration
 ====
 
-Get your panda deeper into your 2016+ Honda Civic, may work on other cars too, check Honda Techinfo for more details
+Get your panda deeper into your 2016+ Honda Civic, may work on other cars too, check Honda Techinfo for more details.
 
 The Idea  
 ====
 
-I wanted to get the B-CAN data from my car. My initial plan was to make a wiring harness that would sit in line of the climate control unit and break off a B-CAN H/L lines to run to the giraffe.
-This did not work for some reason. I also needed to easily add the third CAN bus to the giraffe. I modified the Giraffe to replace CAN 1 on the RJ45 jack to now pass it to CAN3 on the panda. This change broke two things. 1) You can't plug in a comma pedal. But the civic doesn't need a pedal since it has Stop and Go already. <s>I may make a V2 B-CAN giraffe and fix this. Feel free to do it yourself. 2)Switch functionality no longer works. This isn't a big issue for me since I only ever use Openpilot and never use the switches to go back to stock. Again feel free to fix this.</s> Fixed in V2 of the B-CAN Giraffe.
+Access data found on a third CAN bus on your Honda Vehicle. Data on this bus includes Blind Spot Indicators (if vehicle equipped), lights, climate controls, and more.
 
 Installation
 ====
 
--The Giraffe - The giraffe installs just like the regular comma giraffe into the NIDEC camera.
+This is a two part setup.
 
--B-CAN Board - Remove the glovebox from the latches. Easiest way to do this is open it up. On each side there are two circular stoppers, simply pull these in. The glovebox will drop down further. from there you will see the climate control ECU. Remove the plug and attach it to the B-CAN board. Attach the B-CAN board to the climate control ECU.
+- Gateway - The Gateway contains a comma.ai panda [https://github.com/commaai/panda]. It has three CAN busses and uses the panda firmware to proxy the CAN messages from one bus to the other. Currently we are taking all messages from the BCAN (150kbps) and forwarding them onto the FCAN (500kbps). This will allow devices such as the comma two [https://comma.ai/shop/products/comma-two-devkit] and openpilot [https://github.com/commaai/openpilot] to see these new messages, and in the future, control. The gateway has six ethernet ports. Each ethernet port is labeled with its functionality as each is wired differently (see schematic for wiring). The gateway also has 0402 pads for terminating resistors on each bus (if needed). The Gateway is designed to be agnostic to vehicles. Simply follow the wiring to make your own compatible "Car Specific Board". Also includes a USB A for flashing the panda. 
 
--Ethernet - Run an ethernet cable from the B-CAN board to the Giraffe. It is possible to do a stealth install by tucking the cable into the head liner.
+1x - To Harness
+1x - To OBDII Port/ comma power
+1x - To pedal
+2x - Car Specific board
+1x - Expansion
+
+- Honda B-CAN - This board has two JAE MX34036NF4 connectors and one Ethernet port. It is designed to connect to the 36 pin connector on the BCM of select Honda vehicles. The install procedure is so unplug the wiring harness from the BCM (confirmed on 2016 Honda Civic and 2017 Honda CRV, for more vehicles check Techinfo), connect it to the B-CAN board, then use the additional wiring harness (MX34036SF4 to MX34036SF4) to install between the B-CAN board and the BCM. Then use an ethernet cable to connect to the Gateway. This allows a full passthrough of the BCM harness, and taps into the BCAN and FCAN lines (to the Ethernet port). You can also sub the above JAE part numbers for another MX34036 series connector (just be sure to trim the connectors as seen in the build guide, otherwise the connector will not fit in the BCM)
+
+
+====
+
+Contributions welcome! Documentation can be greatly improved! Make a more detailed build guide!  
